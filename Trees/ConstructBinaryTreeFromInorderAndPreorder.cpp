@@ -49,3 +49,38 @@ TreeNode* Solution::buildTree(vector<int> &preorder, vector<int> &inorder) {
     int p = 0;
     return makeTree(preorder, inorder, 0, inorder.size()-1, p);
 }
+
+////////////2nd Approach//////////////////////////////////
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+  TreeNode* buildT(vector<int> &preorder, int preStart, int preEnd, vector<int> &inorder, int inStart, int inEnd) {
+      if(preStart > preEnd || inStart > inEnd) {
+          return 0;
+      }
+      TreeNode*root = new TreeNode(preorder[preStart]);
+      int inRoot = mp[root->val];// direct access to the element usig map
+      int numsLeft = inRoot - inStart;
+      root->left = buildT(preorder, preStart+1, preStart+numsLeft, inorder, inStart, inRoot-1, mp);
+      root->right = buildT(preorder, preStart+numsLeft+1, preEnd, inorder, inRoot+1, inEnd, mp);
+      
+      return root;
+  }
+  
+TreeNode* Solution::buildTree(vector<int> &A, vector<int> &B) {
+    map<int, int> mp;
+    
+    for(int i = 0; i < B.size(); i++) {
+        mp[B[i]] = i;
+    }
+    TreeNode*root = buildT(A, 0, A.size()-1, B, 0, B.size()-1, mp);
+    return root;
+    
+}
+
