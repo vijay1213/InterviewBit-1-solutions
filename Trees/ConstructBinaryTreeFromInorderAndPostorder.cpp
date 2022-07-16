@@ -48,3 +48,61 @@ TreeNode* Solution::buildTree(vector<int> &inorder, vector<int> &postorder) {
     int p = postorder.size()-1;
     return inorder.empty() ? NULL : makeTree(inorder, postorder, 0, inorder.size()-1, p);
 }
+
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+   /**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ ///////////////////////2nd//////////////////////////////////////////
+ 
+TreeNode* buildTree(vector<int> &A, vector<int> &B) {
+    
+    if(A.size()!=B.size()) {
+        return NULL;
+    }
+    map<int, int> mp;
+    
+    for(int i = 0; i < A.size(); i++) {
+        mp[A[i]] = i;
+    }
+    return buildTree(A, 0, A.size()-1, B, 0, B.size()-1, mp);
+}
+TreeNode*buildTree(vector<int> &A, int is, int ie, vector<int> &B, int ps, int pe, map<int, int> &mp) {
+    if(is > ie || ps > pe) {
+        return NULL;
+    }
+    TreeNode*root = new TreeNode(B[pe]);
+    
+    int inRoot = mp[B[pe]];
+    int numsLeft = inRoot - is;
+    
+    root->left = buildTree(A, is, inRoot-1, B, ps, ps+numsLeft-1, mp);
+    
+    root->right = buildTree(A, inRoot+1, ie, B, ps+numsLeft, pe-1, mp);
+    
+    return root;
+}
+
+};
